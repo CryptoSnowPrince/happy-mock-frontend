@@ -28,6 +28,8 @@ import {
 import * as action from '../store/actions'
 import * as selector from '../store/selectors'
 
+import Header from "../component/header";
+
 const web3Modal = web3ModalSetup();
 
 const httpProvider = new Web3.providers.HttpProvider(RPC_URL)
@@ -571,24 +573,13 @@ const Home = () => {
   return (
     <>
       <ToastContainer />
-      <nav className="navbar navbar-expand-sm navbar-dark" style={{ marginTop: "30px" }}>
-        <div className="container"
-          style={{
-            justifyContent: isMobile ? 'space-around' : 'space-between',
-            flexDirection: isMobile ? 'column' : 'row'
-          }}>
-          <div style={{ width: "200px" }}></div>
-          {/* <div style={{ width: "200px", height: "140px" }}></div> */}
-          <button className="btn btn-primary btn-lg btnd btn-custom"
-            style={{ color: "#fff", width: "155px", fontWeight: "bold" }}
-            disabled={pendingTx}
-            onClick={isConnected ? logoutOfWeb3Modal : loadWeb3Modal}>
-            <i className="fas fa-wallet" style={{ marginRight: "12px", color: "white" }}>
-            </i>
-            {connButtonText}
-          </button>
-        </div>
-      </nav>
+      <Header
+        isConnected={isConnected}
+        pendingTx={pendingTx}
+        logoutOfWeb3Modal={logoutOfWeb3Modal}
+        loadWeb3Modal={loadWeb3Modal}
+        connButtonText={connButtonText}
+      />
       <div className="container">
         {
           pendingMessage !== '' ?

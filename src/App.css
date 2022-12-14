@@ -1,15 +1,14 @@
 body {
-  background-color: #09092b !important;
+  background-color: #47b972 !important;
   color: rgba(255, 255, 255, 0.08);
   font-weight: bold;
   font-family: 'Open Sans', sans-serif;
-
 }
 
 .card {
   color: rgb(215, 195, 195);
   /* background: rgba(255, 255, 255, 0.08); */
-  background: #080844;
+  background: #0e53dd;
   border-radius: 15px;
 }
 
@@ -22,8 +21,6 @@ td {
   color: black;
 }
 
-
-
 .btn {
   color: #032654;
 }
@@ -32,8 +29,6 @@ td {
   margin-left: 5px;
   margin-bottom: 5px;
 }
-
-
 
 tr {
   border-bottom: 1px solid #333;
@@ -100,6 +95,23 @@ tr {
   background: #f00
 }
 
+.title {
+  display: flex;
+  justify-content: center;
+  width: 200px;
+}
+
+.title-text {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: 25px;
+  text-align: center;
+  color: #FFBB00;
+}
+
+.custom-navbar {
+  margin-top: 20px;
+}
 
 @media only screen and (max-width: 600px) {
   .btnd {
