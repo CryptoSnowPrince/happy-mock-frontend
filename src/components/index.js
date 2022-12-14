@@ -48,10 +48,6 @@ const displayRemainTime = (seconds) => {
 const Interface = () => {
   const isMobile = window.matchMedia("only screen and (max-width: 1000px)").matches;
 
-  const queryString = window.location.search;
-  const parameters = new URLSearchParams(queryString);
-  const newReferral = parameters.get('ref');
-
   const [Abi, setAbi] = useState();
   const [tokenAbi, setTokenAbi] = useState();
   const [web3, setWeb3] = useState();
@@ -83,19 +79,6 @@ const Interface = () => {
 
   const [remainTime, setRemainTime] = useState(0)
   const [withdrawState, setWithdrawState] = useState(false)
-
-  useEffect(() => {
-    const referral = window.localStorage.getItem("REFERRAL")
-
-    if (!isAddress(referral, MAINNET)) {
-      if (isAddress(newReferral, MAINNET)) {
-        window.localStorage.setItem("REFERRAL", newReferral);
-      } else {
-        window.localStorage.setItem("REFERRAL", ADMIN_ACCOUNT);
-      }
-    }
-    console.log("[PRINCE](referral): ", referral);
-  }, [newReferral])
 
   // const [playing, toggle] = useAudio(music);
 
