@@ -24,8 +24,8 @@ const Header = ({ isConnected, pendingTx, logoutOfWeb3Modal, loadWeb3Modal, conn
                     </button>
                 </div>
             </nav>
-            <div className="subtitle">
-                This is Mock Frontend
+            <div className="subtitle-text">
+                THIS IS MOCK FRONTEND.
             </div>
             <br />
         </>

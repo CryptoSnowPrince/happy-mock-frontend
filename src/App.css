@@ -113,6 +113,14 @@ tr {
   margin-top: 20px;
 }
 
+.subtitle-text {
+  font-weight: bolder;
+  font-size: 30px !important;
+  line-height: 25px;
+  text-align: center;
+  color: #2f00ff;
+}
+
 @media only screen and (max-width: 600px) {
   .btnd {
     width: 100%;
