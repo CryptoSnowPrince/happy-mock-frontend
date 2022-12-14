@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import { styled } from '@mui/material/styles';
 import web3ModalSetup from "./../helpers/web3ModalSetup";
 import Web3 from "web3";
 import {
@@ -8,16 +6,14 @@ import {
   getTokenAbi,
   REFERRAL_PERCENT,
   WITHDRAW_FEE,
-  DENOMINATOR,
   DENOMINATOR_PERCENT,
   DECIMALS,
   EPOCH_LENGTH,
-  TTNBANK,
+  Beauty,
   START_TIME,
   RPC_URL,
   MAINNET,
   ADMIN_ACCOUNT,
-  REF_PREFIX,
   TREASURY,
   WITHDRAW_TIME
 } from "../Abi";
@@ -25,17 +21,6 @@ import {
 // import logoMobile from "./../assets/logo.png";
 
 const web3Modal = web3ModalSetup();
-
-const LightTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: 'rgba(255, 255, 255, 0.8)',
-    boxShadow: theme.shadows[1],
-    fontSize: 14,
-  },
-}));
 
 const httpProvider = new Web3.providers.HttpProvider(RPC_URL)
 const web3NoAccount = new Web3(httpProvider)
@@ -75,12 +60,9 @@ const Interface = () => {
   const [refetch, setRefetch] = useState(true);
   const [curAcount, setCurAcount] = useState(null);
   const [connButtonText, setConnButtonText] = useState("CONNECT");
-  const [refLink, setRefLink] = useState(`${REF_PREFIX}0x0000000000000000000000000000000000000000`);
 
   const [pendingMessage, setPendingMessage] = useState('');
-  const [calculate, setCalculator] = useState('1000');
   const [pendingTx, setPendingTx] = useState(false);
-  const [isTooltipDisplayed, setIsTooltipDisplayed] = useState(false);
 
   const [depositValue, setDepositValue] = useState('');
   const [withdrawValue, setWithdrawValue] = useState('');
@@ -223,8 +205,6 @@ const Interface = () => {
         setCurAPY(curAPYVal)
 
         if (curAcount) {
-          const refLink = `${REF_PREFIX}` + curAcount;
-          setRefLink(refLink);
         }
 
         if (isConnected && Abi && curAcount) {
@@ -233,7 +213,7 @@ const Interface = () => {
           const userBalance = await tokenAbi.methods.balanceOf(curAcount).call();
           setUserBalance(web3NoAccount.utils.fromWei(userBalance, DECIMALS));
 
-          const approvedAmount = await tokenAbi.methods.allowance(curAcount, TTNBANK).call();
+          const approvedAmount = await tokenAbi.methods.allowance(curAcount, Beauty).call();
           setUserApprovedAmount(web3NoAccount.utils.fromWei(approvedAmount, DECIMALS));
 
 
@@ -502,7 +482,7 @@ const Interface = () => {
       if (isConnected && tokenAbi) {
         setPendingMessage("Approving...");
 
-        await tokenAbi.methods.approve(TTNBANK, "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").send({
+        await tokenAbi.methods.approve(Beauty, "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").send({
           from: curAcount
         }).then((txHash) => {
           console.log(txHash)
@@ -553,10 +533,10 @@ const Interface = () => {
                     <a href="/docs/Whitepaper V1.pdf" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> DOCS </a>&nbsp;&nbsp;&nbsp;
                     <a href="https://twitter.com/MangoFinanceCEO" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> TWITTER </a>&nbsp;&nbsp;&nbsp;
                     <a href=" https://t.me/mangofinanceinc" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> TELEGRAM </a>&nbsp;&nbsp;&nbsp;
-                    <a href={"https://www.bscscan.com/address/" + TTNBANK + "#code"} target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> CONTRACT </a>&nbsp;&nbsp;&nbsp;
+                    <a href={"https://www.bscscan.com/address/" + Beauty + "#code"} target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> CONTRACT </a>&nbsp;&nbsp;&nbsp;
                     <a href="https://georgestamp.xyz/" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> AUDIT </a>
                   </h2>
-                  <p style={{ color: "#ffffff", fontSize: "14px", fontWeight: "200", marginBottom: "0px" }}>COPYRIGHT © 2022 TTNBANK Project All rights reserved!</p>
+                  <p style={{ color: "#ffffff", fontSize: "14px", fontWeight: "200", marginBottom: "0px" }}>COPYRIGHT © 2022 Beauty Project All rights reserved!</p>
                 </div>
               </div>
             </div>
@@ -738,42 +718,6 @@ const Interface = () => {
                 </center>
               </div>
             </div>
-            <br />
-            <div className="card" style={{ marginTop: "58px" }}>
-              <div className="card-body">
-                <h4 className="subtitle-normal"><b>REFERRAL LINK</b></h4>
-                <hr />
-                <form>
-                  <span className="content-text13">Share your referral link to earn {REFERRAL_PERCENT / DENOMINATOR_PERCENT}% of BUSD </span>
-                  <br />
-                  <LightTooltip
-                    PopperProps={{
-                      disablePortal: true,
-                    }}
-                    open={isTooltipDisplayed}
-                    disableFocusListener
-                    disableHoverListener
-                    disableTouchListener
-                    title={`Copied! ${refLink}`}
-                    followCursor
-                  >
-                    <input type="text"
-                      className="form-control input-box" readOnly
-                      style={{ marginTop: "10px", fontSize: "15px" }}
-                      value={refLink}
-                      onClick={() => {
-                        if (navigator.clipboard) {
-                          navigator.clipboard.writeText(refLink)
-                          setIsTooltipDisplayed(true);
-                          setTimeout(() => {
-                            setIsTooltipDisplayed(false);
-                          }, 5000);
-                        }
-                      }} />
-                  </LightTooltip>
-                </form>
-              </div>
-            </div>
           </div>
           <div className="col-sm-4">
             <div className="card">
@@ -857,43 +801,6 @@ const Interface = () => {
                     </tr>
                   </tbody>
                 </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <br />
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="card">
-              <div className="card-header" style={{ border: "none" }}>
-                <h3 className="subtitle-normal">RETURN CALCULATOR</h3>
-              </div>
-              <div className="card-body" style={{ paddingTop: "0.6rem" }}>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <input
-                      type="number"
-                      placeholder="100 BUSD"
-                      className="form-control input-box"
-                      value={calculate}
-                      step={10}
-                      onChange={(e) => setCalculator(e.target.value)}
-                    />
-                    <br />
-                    <p className="content-text18">Amount of returns calculated on the basis of deposit amount.
-                      {/* <br />
-                      <b>Note:</b> Min deposit is 20 BUSD & max deposit is 25,000 BUSD. */}
-                    </p>
-                  </div>
-                  <div className="col-sm-6" style={{ textAlign: "right" }}>
-                    <h3 className="subtitle-normal" style={{ fontSize: "16px" }}>ROI</h3>
-                    <p className="content-text">
-                      DAILY RETURN: <span className="value-text">{Number(calculate * curAPY / DENOMINATOR / 30).toFixed(3)} BUSD</span> <br />
-                      WEEKLY RETURN: <span className="value-text">{Number(calculate * curAPY / DENOMINATOR / 4.286).toFixed(3)} BUSD</span>  <br />
-                      MONTHLY RETURN: <span className="value-text">{Number(calculate * curAPY / DENOMINATOR).toFixed(3)} BUSD</span>  <br />
-                      Anual RETURN: <span className="value-text">{Number(calculate * curAPY / DENOMINATOR * 12).toFixed(3)} BUSD</span> </p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
