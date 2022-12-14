@@ -1,16 +1,16 @@
+
+export const ALERT_DELAY = 5000;
+export const ALERT_POSITION = 'top-center';
+
+export const ALERT_EMPTY = ""
+export const ALERT_SUCCESS = "success"
+export const ALERT_WARN = "warning"
+export const ALERT_ERROR = "error"
+
 export const REFERRAL_PERCENT = 1000
 export const WITHDRAW_FEE = 100
 export const DENOMINATOR = 10000
 export const DENOMINATOR_PERCENT = 100
-
-// test
-// export const ADMIN_ACCOUNT = '0x2Cc4467e7a94D55497B704a0acd90ACd1BF9A5af'
-
-// export const BUSD_ADDRESS = "0x457752e5a1A576996FC1b9A050387919ea289Af9";
-// export const TREASURY = '0x84f8bF4bB72F4BE2C131a5F7B519b23958A76980'
-// export const START_TIME = 1666300000 // without withdraw
-// export const EPOCH_LENGTH = 3600
-// export const WITHDRAW_TIME = 600
 
 // export const Beauty = '0xf5341377d0e6368C16097E31c27bd2283A9Cdc8E'; // without withdraw
 

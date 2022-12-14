@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from 'react-toastify';
 import web3ModalSetup from "./../helpers/web3ModalSetup";
 import Web3 from "web3";
 import {
@@ -15,10 +17,16 @@ import {
   MAINNET,
   ADMIN_ACCOUNT,
   TREASURY,
-  WITHDRAW_TIME
+  WITHDRAW_TIME,
+  ALERT_DELAY,
+  ALERT_POSITION,
+  ALERT_EMPTY,
+  ALERT_SUCCESS,
+  ALERT_WARN,
+  ALERT_ERROR,
 } from "../Abi";
-// import logo from "./../assets/logo.png";
-// import logoMobile from "./../assets/logo.png";
+import * as action from '../store/actions'
+import * as selector from '../store/selectors'
 
 const web3Modal = web3ModalSetup();
 
@@ -50,11 +58,15 @@ const Interface = () => {
 
   const [Abi, setAbi] = useState();
   const [tokenAbi, setTokenAbi] = useState();
-  const [web3, setWeb3] = useState();
-  const [isConnected, setIsConnected] = useState(false);
-  const [injectedProvider, setInjectedProvider] = useState();
+
+  const dispatch = useDispatch();
+
+  const web3 = useSelector(selector.web3State)
+  const isConnected = useSelector(selector.isConnectedState)
+  const injectedProvider = useSelector(selector.injectedProviderState)
+  const curAcount = useSelector(selector.curAcountState)
+
   const [refetch, setRefetch] = useState(true);
-  const [curAcount, setCurAcount] = useState(null);
   const [connButtonText, setConnButtonText] = useState("CONNECT");
 
   const [pendingMessage, setPendingMessage] = useState('');
@@ -80,10 +92,12 @@ const Interface = () => {
   const [remainTime, setRemainTime] = useState(0)
   const [withdrawState, setWithdrawState] = useState(false)
 
+  const [alertMessage, setAlertMessage] = useState({ type: ALERT_EMPTY, message: "" })
+
   // const [playing, toggle] = useAudio(music);
 
   const logoutOfWeb3Modal = async () => {
-    await web3Modal.clearCachedProvider();
+    web3Modal.clearCachedProvider();
     if (
       injectedProvider &&
       injectedProvider.provider &&
@@ -91,7 +105,7 @@ const Interface = () => {
     ) {
       await injectedProvider.provider.disconnect();
     }
-    setIsConnected(false);
+    dispatch(action.setIsConnected(false))
 
     window.location.reload();
   };
@@ -99,31 +113,44 @@ const Interface = () => {
     // console.log("Connecting Wallet...");
     const provider = await web3Modal.connect();
     // console.log("provider: ", provider);
-    setInjectedProvider(new Web3(provider));
-    const acc = provider.selectedAddress
-      ? provider.selectedAddress
-      : provider.accounts[0];
+    const web3Provider = new Web3(provider);
+    dispatch(action.setInjectedProvider(web3Provider));
+    var acc = null;
+    try {
+      // alert("loadWeb3Modal try");
+      acc = provider.selectedAddress
+        ? provider.selectedAddress
+        : provider.accounts[0];
+    } catch (error) {
+      // alert("loadWeb3Modal catch");
+      acc = provider.address
+    }
+
+    const _curChainId = await web3Provider.eth.getChainId();
+    if (_curChainId !== MAINNET) {
+      setAlertMessage({ type: ALERT_ERROR, message: 'Wrong Network! Please switch to Binance Smart Chain!' })
+      return;
+    }
+
     const short = shortenAddr(acc);
 
-    setWeb3(new Web3(provider));
-    setAbi(getAbi(new Web3(provider)));
-    setTokenAbi(getTokenAbi(new Web3(provider)));
-    // setAccounts([acc]);
-    setCurAcount(acc);
-    //     setShorttened(short);
-    setIsConnected(true);
+    dispatch(action.setWeb3(web3Provider))
+    dispatch(action.setCurAcount(acc))
+    dispatch(action.setIsConnected(true))
+    setAbi(getAbi(web3Provider));
+    setTokenAbi(getTokenAbi(web3Provider));
 
     setConnButtonText(short);
 
     provider.on("chainChanged", (chainId) => {
       console.log(`chain changed to ${chainId}! updating providers`);
-      setInjectedProvider(new Web3(provider));
+      dispatch(action.setInjectedProvider(web3Provider));
       logoutOfWeb3Modal();
     });
 
     provider.on("accountsChanged", () => {
       console.log(`curAcount changed!`);
-      setInjectedProvider(new Web3(provider));
+      dispatch(action.setInjectedProvider(web3Provider));
       logoutOfWeb3Modal();
     });
 
@@ -133,7 +160,7 @@ const Interface = () => {
       logoutOfWeb3Modal();
     });
     // eslint-disable-next-line
-  }, [setInjectedProvider]);
+  }, [dispatch]);
 
   useEffect(() => {
     setInterval(() => {
@@ -141,14 +168,6 @@ const Interface = () => {
         return !prevRefetch;
       });
     }, 10000);
-  }, []);
-
-  useEffect(() => {
-    if (web3Modal.cachedProvider) {
-      loadWeb3Modal();
-    }
-
-    // eslint-disable-next-line
   }, []);
 
   const shortenAddr = (addr) => {
@@ -485,9 +504,73 @@ const Interface = () => {
     }
   };
 
+  const handleClose = useCallback(() => {
+    setAlertMessage({ type: ALERT_EMPTY, message: "" })
+  }, [setAlertMessage])
+
+  const notifySuccess = useCallback(() => {
+    toast.success(alertMessage.message, {
+      position: ALERT_POSITION,
+      autoClose: ALERT_DELAY,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      onClose: handleClose,
+      className: 'alert-message-success'
+    });
+  }, [alertMessage.message, handleClose]);
+
+  const notifyError = useCallback(() => {
+    toast.error(alertMessage.message, {
+      position: ALERT_POSITION,
+      autoClose: ALERT_DELAY,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      onClose: handleClose,
+      className: 'alert-message-error'
+    });
+  }, [alertMessage.message, handleClose]);
+
+  const notifyWarn = useCallback(() => {
+    toast.warn(alertMessage.message, {
+      position: ALERT_POSITION,
+      autoClose: ALERT_DELAY,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      onClose: handleClose,
+      className: 'alert-message-warn',
+      progressClassName: 'alert-message-warn-progress'
+    });
+  }, [alertMessage.message, handleClose]);
+
+  useEffect(() => {
+    switch (alertMessage.type) {
+      case ALERT_ERROR:
+        notifyError()
+        return;
+      case ALERT_SUCCESS:
+        notifySuccess()
+        return;
+      case ALERT_WARN:
+        notifyWarn()
+        return;
+      case ALERT_EMPTY:
+        return;
+      default:
+        handleClose();
+        return;
+    }
+
+  }, [alertMessage, notifyError, notifyWarn, notifySuccess, handleClose])
 
   return (
     <>
+      <ToastContainer />
       <nav className="navbar navbar-expand-sm navbar-dark" style={{ marginTop: "30px" }}>
         <div className="container"
           style={{
@@ -507,24 +590,6 @@ const Interface = () => {
         </div>
       </nav>
       <div className="container">
-        {/* <div className="row" style={{ marginBottom: "20px" }}>
-          <div className="col-sm-12">
-            <div className="card">
-              <div className="card-body">
-                <div className="top-info">
-                  <h2 className="footer-item-text" style={{ display: "flex", flexWrap: "wrap" }}>
-                    <a href="/docs/Whitepaper V1.pdf" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> DOCS </a>&nbsp;&nbsp;&nbsp;
-                    <a href="https://twitter.com/MangoFinanceCEO" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> TWITTER </a>&nbsp;&nbsp;&nbsp;
-                    <a href=" https://t.me/mangofinanceinc" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> TELEGRAM </a>&nbsp;&nbsp;&nbsp;
-                    <a href={"https://www.bscscan.com/address/" + Beauty + "#code"} target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> CONTRACT </a>&nbsp;&nbsp;&nbsp;
-                    <a href="https://georgestamp.xyz/" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}> AUDIT </a>
-                  </h2>
-                  <p style={{ color: "#ffffff", fontSize: "14px", fontWeight: "200", marginBottom: "0px" }}>COPYRIGHT © 2022 Beauty Project All rights reserved!</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
         {
           pendingMessage !== '' ?
             <>

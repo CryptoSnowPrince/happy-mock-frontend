@@ -3,7 +3,7 @@ body {
   color: rgba(255, 255, 255, 0.08);
   font-weight: bold;
   font-family: 'Open Sans', sans-serif;
- 
+
 }
 
 .card {
@@ -12,6 +12,7 @@ body {
   background: #080844;
   border-radius: 15px;
 }
+
 .cardDino {
   /* height: 467px; */
   height: auto;
@@ -24,8 +25,9 @@ td {
 
 
 .btn {
-color: #032654;
+  color: #032654;
 }
+
 .btnd {
   margin-left: 5px;
   margin-bottom: 5px;
@@ -42,11 +44,13 @@ tr {
   background-color: #f1c449;
   border-color: #f1c449;
 }
+
 .btn-primary:active {
   color: #fff;
   background-color: #f1c449;
   border-color: #f1c449;
 }
+
 .btn-primary:focus {
   color: #fff;
   background-color: #f1c449;
@@ -60,25 +64,54 @@ tr {
 }
 
 .form-control:focus {
-    box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
-    font-weight: 1000;
-  }
+  box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+  font-weight: 1000;
+}
 
-.form-control:disabled, .form-control[readonly] {
+.form-control:disabled,
+.form-control[readonly] {
   background-color: rgba(255, 255, 255);
   font-weight: 1000;
   opacity: 1;
 }
+
+.alert-message-success,
+.alert-message-error,
+.alert-message-warn {
+  color: rgb(12, 13, 12);
+  font-size: 20px;
+  font-weight: bold;
+  width: 400px;
+}
+
+.alert-message-success {
+  background-color: #0fd1ee;
+}
+
+.alert-message-error {
+  background-color: rgb(243, 159, 14);
+}
+
+.alert-message-warn {
+  background-color: #f1e20a;
+}
+
+.alert-message-warn-progress {
+  background: #f00
+}
+
 
 @media only screen and (max-width: 600px) {
   .btnd {
     width: 100%;
     margin-bottom: 5px;
   }
+
   .cardDino {
     height: auto;
     margin-bottom: 10px;
   }
+
   .card {
     margin-bottom: 10px;
   }
@@ -87,7 +120,7 @@ tr {
     font-weight: bolder;
     font-size: 25px !important;
   }
-  
+
   .subtitle-normal {
     font-weight: bolder;
     font-size: 22px !important;
@@ -100,10 +133,12 @@ tr {
     width: 100%;
     margin-bottom: 10px;
   }
+
   .col-sm-4 {
     width: 100%;
     margin-bottom: 10px;
   }
+
   .mobile-show {
     display: none;
   }
@@ -118,7 +153,7 @@ tr {
   font-weight: 800;
   font-size: 16px;
   line-height: 38px;
-  
+
   color: #000;
 }
 
@@ -144,6 +179,7 @@ tr {
   border: none;
   padding: 10px;
 }
+
 .subtitle {
   font-weight: 600;
   font-size: 22px;

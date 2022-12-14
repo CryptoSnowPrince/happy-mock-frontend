@@ -1,15 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'font-awesome/css/font-awesome.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import Interface from './components';
 
 const App = () => {
-return (
-<>
-<Interface />
-</>
+    return (
+        <>
+            <Interface />
+        </>
 
-);
+    );
 }
 
 export default App;
