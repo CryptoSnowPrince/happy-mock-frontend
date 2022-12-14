@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 
 const Header = ({ isConnected, pendingTx, logoutOfWeb3Modal, loadWeb3Modal, connButtonText }) => {
     const isMobile = window.matchMedia("only screen and (max-width: 1000px)").matches;
@@ -25,7 +25,7 @@ const Header = ({ isConnected, pendingTx, logoutOfWeb3Modal, loadWeb3Modal, conn
                 </div>
             </nav>
             <div className="subtitle-text">
-                THIS IS MOCK FRONTEND.
+                THIS IS MOCK FRONTEND
             </div>
             <br />
         </>
