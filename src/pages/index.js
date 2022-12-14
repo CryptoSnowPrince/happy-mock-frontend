@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
-import web3ModalSetup from "./../helpers/web3ModalSetup";
+import web3ModalSetup from "../helpers/web3ModalSetup";
 import Web3 from "web3";
 import {
   getAbi,
@@ -53,7 +53,7 @@ const displayRemainTime = (seconds) => {
   return `0H : 0M`
 }
 
-const Interface = () => {
+const Home = () => {
   const isMobile = window.matchMedia("only screen and (max-width: 1000px)").matches;
 
   const [Abi, setAbi] = useState();
@@ -859,4 +859,4 @@ const Interface = () => {
     </>);
 }
 
-export default Interface;
+export default Home;

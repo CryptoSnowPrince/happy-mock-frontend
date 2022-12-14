@@ -1,5 +1,5 @@
 
-export const ALERT_DELAY = 5000;
+export const ALERT_DELAY = 3000;
 export const ALERT_POSITION = 'top-center';
 
 export const ALERT_EMPTY = ""
